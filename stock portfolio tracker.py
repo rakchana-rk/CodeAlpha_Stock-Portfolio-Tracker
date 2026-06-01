@@ -1,58 +1,40 @@
-# Stock Portfolio Tracker
+STOCK_PRICES = {
+    "AAPL": 180,
+    "TSLA": 250,
+    "GOOGL": 150,
+    "MSFT": 300
+}
 
-portfolio = {}
+def stock_portfolio_tracker():
+    print("=" * 45)
+    print("      STOCK PORTFOLIO TRACKER")
+    print("=" * 45)
 
-while True:
-    print("\n--- Stock Portfolio Tracker ---")
-    print("1. Add Stock")
-    print("2. View Portfolio")
-    print("3. Save Portfolio")
-    print("4. Exit")
+    total_value = 0
 
-    choice = input("Enter your choice: ")
+    while True:
+        stock = input("\nEnter stock symbol (or 'done' to finish): ").upper()
 
-    if choice == "1":
-        stock = input("Enter stock name: ").upper()
+        if stock == "DONE":
+            break
+
+        if stock not in STOCK_PRICES:
+            print("Stock not found.")
+            continue
+
         quantity = int(input("Enter quantity: "))
-        price = float(input("Enter purchase price: "))
 
-        portfolio[stock] = {
-            "quantity": quantity,
-            "price": price
-        }
+        investment = STOCK_PRICES[stock] * quantity
+        total_value += investment
 
-        print("Stock added successfully!")
+        print(f"Investment in {stock}: ${investment}")
 
-    elif choice == "2":
-        total_investment = 0
+    print("\nTotal Portfolio Value: $", total_value)
 
-        print("\nPortfolio Details:")
-        for stock, details in portfolio.items():
-            investment = details["quantity"] * details["price"]
-            total_investment += investment
+    with open("portfolio_summary.txt", "w") as file:
+        file.write(f"Total Portfolio Value: ${total_value}")
 
-            print(
-                f"{stock} - Quantity: {details['quantity']}, "
-                f"Price: {details['price']}, "
-                f"Investment: {investment}"
-            )
+    print("Portfolio summary saved to portfolio_summary.txt")
 
-        print("Total Investment:", total_investment)
-
-    elif choice == "3":
-        file = open("portfolio.txt", "w")
-
-        for stock, details in portfolio.items():
-            file.write(
-                f"{stock},{details['quantity']},{details['price']}\n"
-            )
-
-        file.close()
-        print("Portfolio saved to file!")
-
-    elif choice == "4":
-        print("Exiting program...")
-        break
-
-    else:
-        print("Invalid choice!")
+if __name__ == "__main__":
+    stock_portfolio_tracker()
